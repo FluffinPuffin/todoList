@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, FlatList, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView, FlatList, Text, View, TextInput, Button } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   itemText: {
     fontSize: 18,
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc'
   },
   completedText: {
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#000000',
   }
 });
 
@@ -28,7 +38,7 @@ export default function App() {
     },
     {
       key: 2,
-      completed: true,
+      completed: false,
       description: "Description2"
     },
     {
@@ -38,28 +48,37 @@ export default function App() {
     },
     {
       key: 4,
-      completed: true,
+      completed: false,
       description: "Description4"
     },
     {
       key: 5,
-      completed: true,
+      completed: false,
       description: "Description5"
     }
   ]);
 
+  const [newTask, setNewTask] = useState('');
+
   const toggleCompleted = (key) => {
     const newData = data.map(item => {
       if (item.key === key) {
-        if (item.completed) {
-          item.completed = false;
-        } else {
-          item.completed = true;
-        }
+        item.completed = !item.completed;
       }
       return item;
     });
     setData(newData);
+  };
+
+  const addTask = () => {
+    if (newTask.trim()) {
+      const newKey = data.length ? data[data.length - 1].key + 1 : 1;
+      const newData = [...data, { key: newKey, completed: false, description: newTask }];
+      setData(newData);
+      setNewTask('');
+    } else {
+      console.log("Task description cannot be empty");
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -91,6 +110,14 @@ export default function App() {
         renderItem={renderItem}
         keyExtractor={item => item.key.toString()}
       />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={newTask}
+          onChangeText={setNewTask}
+        />
+        <Button title="Add" onPress={addTask} />
+      </View>
     </SafeAreaView>
   );
 }
