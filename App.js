@@ -63,7 +63,11 @@ export default function App() {
   const toggleCompleted = (key) => {
     const newData = data.map(item => {
       if (item.key === key) {
-        item.completed = !item.completed;
+        if (item.completed) {
+          item.completed = false;
+        } else {
+          item.completed = true;
+        }
       }
       return item;
     });
