@@ -75,14 +75,16 @@ export default function App() {
   };
 
   const addTask = () => {
-    if (newTask.trim()) {
-      const newKey = data.length ? data[data.length - 1].key + 1 : 1;
-      const newData = [...data, { key: newKey, completed: false, description: newTask }];
-      setData(newData);
-      setNewTask('');
+    let newKey;
+    if (data.length) {
+      newKey = data[data.length - 1].key + 1;
     } else {
-      console.log("Task description cannot be empty");
+      newKey = 1;
     }
+
+    const newData = [...data, { key: newKey, completed: false, description: newTask }];
+    setData(newData);
+    setNewTask('');
   };
 
   const renderItem = ({ item }) => {
